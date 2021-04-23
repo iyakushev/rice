@@ -1,0 +1,16 @@
+{
+	// rls
+	"rust-analyzer.enable": true,
+	"rust-analyzer.checkOnSave.enable": true,
+	"rust-analyzer.checkOnSave.command": "clippy",
+	// python
+	"pyright.disableDiagnostics": false,
+	"python.linting.lintOnSave": true,
+	"python.linting.enabled": true,
+	"python.linting.pylintEnabled": false,
+	"python.linting.flake8Enabled": true,
+	"python.linting.flake8Args": [
+		"--max-line-length=120",
+		"--ignore=E225,E704,E221,E226,E701,W291,W503"
+	]
+}
