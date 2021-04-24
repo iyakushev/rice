@@ -145,11 +145,15 @@ endif
 set vb t_vb=
 
 " Set tabs and indents (for go)
-set ts=8
-set shiftwidth=8
-set ai sw=8
+set tabstop=4 softtabstop=4
+set shiftwidth=4
+set smartindent
 " replace tab with spaces
-"set expandtab
+set expandtab
+
+set incsearch
+
+
 " allow cursor to move to beginning of tab
 " will interfere with soft line wrapping (set nolist)
 set list lcs=tab:\ \ 
@@ -160,7 +164,8 @@ set hlsearch
 
 " Line numbering
 " Toggle set to ';n' in key map section
-set nonumber
+set nu
+set relativenumber
 
 " Disable line wrapping
 " Toggle set to ';w' in key map section
@@ -181,7 +186,7 @@ filetype indent on
 syntax on
 
 " scroll a bit horizontally when at the end of the line
-set sidescroll=6
+set sidescroll=8
 
 " Make it easier to work with buffers
 " http://vim.wikia.com/wiki/Easier_buffer_switching
@@ -286,7 +291,7 @@ nnoremap <silent> <Space>z :Goyo<CR>
 nnoremap <silent> <leader>tb :TagbarToggle<CR>
 
 " toggle line numbers
-nnoremap <silent> <leader>n :set number! number?<CR>
+nnoremap <silent> <leader>n :set relativenumber! relativenumber?<CR>
 
 " toggle line wrap
 nnoremap <silent> <leader>w :set wrap! wrap?<CR>
