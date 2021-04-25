@@ -151,6 +151,7 @@ set smartindent
 " replace tab with spaces
 set expandtab
 
+" highlight search matches
 set incsearch
 
 
@@ -186,7 +187,8 @@ filetype indent on
 syntax on
 
 " scroll a bit horizontally when at the end of the line
-set sidescroll=8
+set sidescroll=1
+set scrolloff=5
 
 " Make it easier to work with buffers
 " http://vim.wikia.com/wiki/Easier_buffer_switching
@@ -448,8 +450,8 @@ autocmd WinLeave * setlocal nocursorline
 " =====================================
 set completeopt+=noinsert
 set completeopt+=noselect
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#go#use_cache = 1
+" let g:deoplete#enable_at_startup = 1
+" let g:deoplete#sources#go#use_cache = 1
 
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
