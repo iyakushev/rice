@@ -99,7 +99,7 @@ Plug 'mileszs/ack.vim'
 " https://github.com/junegunn/fzf.vim (more extensive wrapper)
 " https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2#.rkhrm332m
 " To update: :PlugUpdate fzf
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " indentline
@@ -255,13 +255,13 @@ set guifont=Fira\ Code\ Retina\ Regular:h16
 " =====================================
 
 " change the leader key from "\" to ";" ("," is also popular)
-let mapleader=";"
+let mapleader=" "
 
 " Shortcut to edit THIS configuration file: (e)dit (c)onfiguration
-nnoremap <silent> <leader>ec :e $MYVIMRC<CR>
+nnoremap <silent> <leader>ce :e $MYVIMRC<CR>
 
 " Shortcut to source (reload) THIS configuration file after editing it: (s)ource (c)onfiguraiton
-nnoremap <silent> <leader>sc :source $MYVIMRC<CR>
+nnoremap <silent> <leader>cr :source $MYVIMRC<CR>
 
 " use ;; for escape
 " http://vim.wikia.com/wiki/Avoid_the_escape_key
@@ -282,12 +282,16 @@ inoremap {;<CR> {<CR>};<ESC>O
 " http://stackoverflow.com/questions/7722177/how-do-i-map-ctrl-x-ctrl-o-to-ctrl-space-in-terminal-vim#answer-24550772
 "nnoremap <C-Space> :NERDTreeToggle<CR>
 "nmap <C-@> <C-Space>
-nnoremap <silent> <Space>t :NERDTreeToggle<CR>
+nnoremap <silent> <leader>e :NERDTreeToggle<CR>
 
-nnoremap <silent> <Space>f :NERDTreeFind<CR>
+nnoremap <silent> <leader>tf :NERDTreeFind<CR>
+
+
+" toggle Rg finder
+nnoremap <silent> <leader>F :Find<CR>
 
 " toggle zen
-nnoremap <silent> <Space>z :Goyo<CR>
+nnoremap <silent> <leader>z :Goyo<CR>
 
 " toggle tagbar
 nnoremap <silent> <leader>tb :TagbarToggle<CR>
@@ -606,7 +610,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Show all diagnostics.
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+nnoremap <silent><nowait> <space>l  :<C-u>CocList extensions<cr>
 " Show commands.
 nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
