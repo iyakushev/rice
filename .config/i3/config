@@ -16,14 +16,17 @@ for_window [class=".*"] border pixel 3
 gaps outer 5
 gaps inner 10
 
-# autostart
+# autostart and
+# set 1st display to left
+exec --no-startup-id xrandr --output DVI-D-0 --rotate left
+# set bg wallpaper
 exec --no-startup-id feh --bg-scale ~/Pictures/wall.jpg
 exec --no-startup-id xsettingsd &
 exec --no-startup-id picom -f
 exec --no-startup-id nm-applet
 #exec --no-startup-id ~/.config/polybar/launch.sh
-exec setxkbmap -layout us,ru
-exec setxkbmap -option 'grp:alt_shift_toggle'
+#exec "setxkbmap -layout us,ru"
+exec "setxkbmap -model pc105 -layout us,ru -variant qwerty -option grp:win_space_toggle"
 
 # Menu
 bindsym $mod+d exec rofi -lines 12 -padding 18 -width 60 -location 0 -show drun -sidebar-mode -columns 
@@ -68,6 +71,9 @@ bindsym XF86AudioPlay exec playerctl play
 bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
+
+# Lockscreen
+bindsym $mod+Shift+q exec i3lock
 
 
 # change focus
@@ -122,9 +128,9 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
+set $ws1 "dev"
+set $ws2 "media"
+set $ws3 "misc"
 set $ws4 "4"
 set $ws5 "5"
 set $ws6 "6"
@@ -218,9 +224,9 @@ bar {
 
 
 # window rules, you can find the window class using xpropc
-assign [class=URxvt] 1
+assign [class=Code] dev
 assign [class=Firefox|Transmission-gtk] 2
-assign [class=Thunar|File-roller] 3
+#assign [class=Thunar|File-roller] 3
 assign [class=Geany|Evince|Gucharmap|Soffice|libreoffice*] 4
 assign [class=Audacity|Vlc|mpv|Ghb|Xfburn|Gimp*|Inkscape] 5
 for_window [class=Viewnior|feh|Audacious|File-roller|Lxappearance|Lxtask|Pavucontrol] floating enable

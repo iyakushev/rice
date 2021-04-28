@@ -1,10 +1,8 @@
 {
 	"coc.preferences.colorSupport": false,
-	// rls
 	"rust-analyzer.enable": true,
 	"rust-analyzer.checkOnSave.enable": true,
 	"rust-analyzer.checkOnSave.command": "clippy",
-	// python
 	"pyright.disableDiagnostics": false,
 	"python.linting.lintOnSave": true,
 	"python.linting.enabled": true,
