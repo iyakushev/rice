@@ -1,6 +1,5 @@
 call plug#begin('~/.vim/plugged')
 " -------------------------------------
-
 " http://vimcolors.com/
 " Plug 'freeo/vim-kalisi'
 " Plug 'w0ng/vim-hybrid'
@@ -14,7 +13,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'morhetz/gruvbox'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'ryanoasis/vim-devicons'
-
 " Coc language packs
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'cespare/vim-toml'
@@ -24,6 +22,10 @@ Plug 'rhysd/vim-clang-format'
 
 " Cargo check version
 Plug 'mhinz/vim-crates'
+
+" Match pairs
+Plug 'jiangmiao/auto-pairs'
+
 
 " For better syntax experience
 Plug 'sheerun/vim-polyglot'
@@ -154,6 +156,24 @@ set expandtab
 " highlight search matches
 set incsearch
 
+" Disable arrow keys
+" Remove newbie crutches in Insert Mode
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
+inoremap <Up> <Nop>
+
+" Remove newbie crutches in Normal Mode
+nnoremap <Down> <Nop>
+nnoremap <Left> <Nop>
+nnoremap <Right> <Nop>
+nnoremap <Up> <Nop>
+
+" Remove newbie crutches in Visual Mode
+vnoremap <Down> <Nop>
+vnoremap <Left> <Nop>
+vnoremap <Right> <Nop>
+vnoremap <Up> <Nop>
 
 " allow cursor to move to beginning of tab
 " will interfere with soft line wrapping (set nolist)
@@ -268,13 +288,13 @@ nnoremap <silent> <leader>cr :source $MYVIMRC<CR>
 inoremap ;; <Esc>
 
 " set auto closing for brackets and quotes
-inoremap " ""<left>
-inoremap ' ''<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<ESC>O
-inoremap {;<CR> {<CR>};<ESC>O
+"inoremap " ""<left>
+"inoremap ' ''<left>
+"inoremap ( ()<left>
+"inoremap [ []<left>
+"inoremap { {}<left>
+"inoremap {<CR> {<CR>}<ESC>O
+"inoremap {;<CR> {<CR>};<ESC>O
 
 " Toggle NERDTree
 " Can't get <C-Space> by itself to work, so this works as Ctrl - space - space
