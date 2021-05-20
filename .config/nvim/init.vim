@@ -30,6 +30,10 @@ Plug 'jiangmiao/auto-pairs'
 " For better syntax experience
 Plug 'sheerun/vim-polyglot'
 
+" Debugger
+Plug 'puremourning/vimspector'
+Plug 'szw/vim-maximizer'
+
 " Plug 'davidhalter/jedi-vim'
 
 " NERD Tree - tree explorer
@@ -181,7 +185,10 @@ set list lcs=tab:\ \
 
 " highlight matches when searching
 " Use C-l to clear (see key map section)
-set hlsearch
+set nohlsearch
+
+" Set mouse mode
+set mouse=a
 
 " Line numbering
 " Toggle set to ';n' in key map section
@@ -353,7 +360,7 @@ nnoremap <silent> <leader>bv :vnew<CR>
 
 " redraw screan and clear search highlighted items
 "http://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting#answer-25569434
-nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
+"nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
 
 " vimux
 " https://raw.githubusercontent.com/benmills/vimux/master/doc/vimux.txt
@@ -379,6 +386,43 @@ nnoremap <A-h> <C-w>h
 nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
+
+
+fun! GotoWindow(id)
+    call win_gotoid(a:id)
+    MaximizerToggle
+endfun
+
+fun! AddToWatch()
+    let word = expand("<cexpr>")
+    call vimspector#AddWatch(word)
+endfun
+
+" Debugger remaps
+nnoremap <leader>m :MaximizerToggle!<CR>
+nnoremap <leader>dd :call vimspector#Launch()<CR>
+nnoremap <leader>dc :call GotoWindow(g:vimspector_session_windows.code)<CR>
+nnoremap <leader>dt :call GotoWindow(g:vimspector_session_windows.tagpage)<CR>
+nnoremap <leader>dv :call GotoWindow(g:vimspector_session_windows.variables)<CR>
+nnoremap <leader>dw :call GotoWindow(g:vimspector_session_windows.watches)<CR>
+nnoremap <leader>ds :call GotoWindow(g:vimspector_session_windows.stack_trace)<CR>
+nnoremap <leader>do :call GotoWindow(g:vimspector_session_windows.output)<CR>
+nnoremap <leader>de :call vimspector#Reset()<CR>
+
+nnoremap <leader>dtcb :call vimspector#CleanLineBreakpoint()<CR>
+
+nmap <leader>dl <Plug>VimspectorStepInto
+nmap <leader>dj <Plug>VimspectorStepOver
+nmap <leader>dk <Plug>VimspectorStepOut
+nmap <leader>d_ <Plug>VimspectorRestart
+nnoremap <leader>d<space> :call vimspector#Continue()<CR>
+
+nmap <leader>drc <Plug>VimspectorRunToCursor
+nmap <leader>db <Plug>VimspectorToggleBreakpoint
+nmap <leader>dcb <Plug>VimspectorToggleConditionalBreakpoint
+nnoremap <leader>d? :call AddToWatch()<CR>
+
+let g:vimspector_base_dir = expand('$HOME/.config/nvim/vimspector-config.json')
 
 " Start terminal in insert mode
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif
