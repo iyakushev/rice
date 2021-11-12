@@ -19,6 +19,7 @@ Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
+Plug 'ron-rs/ron.vim'
 
 " Cargo check version
 Plug 'mhinz/vim-crates'
@@ -29,6 +30,7 @@ Plug 'jiangmiao/auto-pairs'
 
 " For better syntax experience
 Plug 'sheerun/vim-polyglot'
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 " Debugger
 Plug 'puremourning/vimspector'
@@ -160,6 +162,12 @@ set expandtab
 " highlight search matches
 set incsearch
 
+" Clipboard settings
+noremap <Leader>y "+y
+noremap <Leader>p "+p
+noremap <Leader>Y "+y
+noremap <Leader>P "+y
+
 " Disable arrow keys
 " Remove newbie crutches in Insert Mode
 inoremap <Down> <Nop>
@@ -265,6 +273,11 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 hi Statement ctermfg=1 guifg=#60BB60
 hi Constant ctermfg=4
 
+
+
+" Add filetype syntax for Waffle language.
+au BufNewFile,BufRead,BufReadPost *.wf set syntax=rust
+
 " for macvim
 "
 " Disable scrollbar in gui
@@ -281,6 +294,12 @@ set guifont=Fira\ Code\ Retina\ Regular:h16
 " http://stackoverflow.com/questions/22849386/difference-between-nnoremap-and-inoremap#answer-22849425
 " =====================================
 
+" c++ syntax highlighting
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+
+
 " change the leader key from "\" to ";" ("," is also popular)
 let mapleader=" "
 
@@ -290,9 +309,9 @@ nnoremap <silent> <leader>ce :e $MYVIMRC<CR>
 " Shortcut to source (reload) THIS configuration file after editing it: (s)ource (c)onfiguraiton
 nnoremap <silent> <leader>cr :source $MYVIMRC<CR>
 
-" use ;; for escape
+" use j+k for escape
 " http://vim.wikia.com/wiki/Avoid_the_escape_key
-inoremap ;; <Esc>
+inoremap jk <Esc>
 
 " set auto closing for brackets and quotes
 "inoremap " ""<left>
@@ -409,20 +428,20 @@ nnoremap <leader>ds :call GotoWindow(g:vimspector_session_windows.stack_trace)<C
 nnoremap <leader>do :call GotoWindow(g:vimspector_session_windows.output)<CR>
 nnoremap <leader>de :call vimspector#Reset()<CR>
 
-nnoremap <leader>dtcb :call vimspector#CleanLineBreakpoint()<CR>
 
+nmap <Leader>di <Plug>VimspectorBalloonEval
 nmap <leader>dl <Plug>VimspectorStepInto
 nmap <leader>dj <Plug>VimspectorStepOver
 nmap <leader>dk <Plug>VimspectorStepOut
 nmap <leader>d_ <Plug>VimspectorRestart
-nnoremap <leader>d<space> :call vimspector#Continue()<CR>
+nnoremap <leader>dg :call vimspector#Continue()<CR>
 
-nmap <leader>drc <Plug>VimspectorRunToCursor
+nmap <leader>dr <Plug>VimspectorRunToCursor
 nmap <leader>db <Plug>VimspectorToggleBreakpoint
 nmap <leader>dcb <Plug>VimspectorToggleConditionalBreakpoint
 nnoremap <leader>d? :call AddToWatch()<CR>
 
-let g:vimspector_base_dir = expand('$HOME/.config/nvim/vimspector-config.json')
+let g:vimspector_base_dir = expand('$HOME/.config/nvim/')
 
 " Start terminal in insert mode
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif

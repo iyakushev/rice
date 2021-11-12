@@ -3,15 +3,44 @@
 	"rust-analyzer.enable": true,
 	"rust-analyzer.checkOnSave.enable": true,
 	"rust-analyzer.checkOnSave.command": "clippy",
+    "rust-analyzer.diagnostics.disabled": [
+        "unresolved-macro-call",
+    ],
     "clangd.arguments": ["-std=c++17"],
 	"pyright.disableDiagnostics": false,
 	"python.linting.lintOnSave": true,
 	"python.linting.enabled": true,
-	"python.linting.pylintEnabled": false,
+	"python.linting.pylintEnabled": true,
 	"python.linting.flake8Enabled": true,
+    "pyright.completion.snippetSupport": true,
 	"python.linting.flake8Args": [
 		"--max-line-length=120",
 		"--ignore=E225,E704,E221,E226,E701,W291,W503"
   ],
-  "clangd.path": "/home/iy/.config/coc/extensions/coc-clangd-data/install/12.0.0/clangd_12.0.0/bin/clangd"
+  "initializationOptions": {
+    // ...
+    // This will re-index the file on buffer change which is definitely a performance hit. See if it works for you
+    "index": {
+      "onChange": true
+    },
+    // This is mandatory!
+    "highlight": { "lsRanges" : true },
+  },
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "args": ["--log-file=/tmp/ccls.log", "-v=1"],
+      "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
+      "rootPatterns": [".ccls", "compile_commands.json"],
+      "initializationOptions": {
+         "cache": {
+           "directory": "/tmp/ccls"
+         },
+         "client": {
+          "snippetSupport": true
+         }
+       }
+    }
+  }
+  //"clangd.path": "/home/iy/.config/coc/extensions/coc-clangd-data/install/12.0.0/clangd_12.0.0/bin/clangd"
 }
