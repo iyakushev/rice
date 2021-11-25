@@ -42,7 +42,6 @@
 (setq doom-themes-treemacs-theme "doom-colors")
 (setq treemacs-git-mode 'extended)
 
-
 ;; disable popup ui docs
 (setq lsp-ui-doc-enable 'nil)
 
@@ -66,3 +65,17 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+
+;; Presentation settings
+;; (use-package! org-tree-slide)
+
+
+
+;; Org madness
+(setq org-hide-emphasis-markers t)
+
+;; `-` char replace for lists
+(font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
