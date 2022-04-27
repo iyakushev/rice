@@ -67,14 +67,15 @@
 ;; they are implemented.
 
 
-;; Presentation settings
-;; (use-package! org-tree-slide)
-
-
+(use-package lsp-pyright)  ; or lsp-deferred
+(setq! lsp-pyright-typechecking-mode "strict")
 
 ;; Org madness
 (setq org-hide-emphasis-markers t)
 
+;; increase max # of lines for errmsg
+(after! lsp-ui
+  (setq lsp-ui-sideline-diagnostic-max-lines 2))
 ;; `-` char replace for lists
 (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
