@@ -67,6 +67,52 @@
 ;; they are implemented.
 
 
+;; C++ clangd setup
+(setq lsp-clients-clangd-args '("-j=6"
+				"--background-index"
+				"--clang-tidy"
+                                "--query-driver=clang-14"
+                                "--fallback-style=chromium"
+				"--completion-style=detailed"
+				"--header-insertion=never"
+				"--header-insertion-decorators=0"))
+(after! lsp-clangd (set-lsp-priority! 'clangd 2))
+
+;; C++ CCLS setup
+;; (after! ccls
+;;   (setq ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
+;;   (set-lsp-priority! 'ccls 2)) ; optional as ccls is the default in Doom
+
+;; CMake goodies
+(use-package cmake-mode
+  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
+
+;;(use-package cmake-font-lock
+;;  :after (cmake-mode)
+
+
+;; (use-package cmake-ide
+;;   :after projectile
+;;   :hook (c++-mode . my/cmake-ide-find-project)
+;;   :preface
+;;   (defun my/cmake-ide-find-project ()
+;;     "Finds the directory of the project for cmake-ide."
+;;     (with-eval-after-load 'projectile
+;;       (setq cmake-ide-project-dir (projectile-project-root))
+;;       (setq cmake-ide-build-dir (concat cmake-ide-project-dir "build")))
+;;     (setq cmake-ide-compile-command
+;;             (concat "cd " cmake-ide-build-dir " && cmake .. && make"))
+;;     (cmake-ide-load-db))
+;;
+;;   (defun my/switch-to-compilation-window ()
+;;     "Switches to the *compilation* buffer after compilation."
+;;     (other-window 1))
+;;   :bind ([remap comment-region] . cmake-ide-compile)
+;;   :init (cmake-ide-setup)
+;;   :config (advice-add 'cmake-ide-compile :after #'my/switch-to-compilation-window))
+
+
+;; Pyright. STRICT PYTHON FOR MASSES
 (use-package lsp-pyright)  ; or lsp-deferred
 (setq! lsp-pyright-typechecking-mode "strict")
 
