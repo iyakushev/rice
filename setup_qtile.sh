@@ -20,6 +20,7 @@ cd qtile && pip install .
 # =====
 # SLOCK
 echo "[2/3] Setting up SLOCK"
+sudo apt install cowsay fortune lolcat
 cd ${BASEDIR}/slock
 sudo make install
 
