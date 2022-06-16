@@ -24,6 +24,15 @@ cd ${BASEDIR}/slock
 sudo make install
 
 
+# =======
+# ROFI
+sudo apt install libpango-1.0-0 libpango1.0-dev libcairo2-dev libglib2.0-dev libgdk-pixbuf2.0-dev libxkbcommon-dev libxkbcommon-x11-dev libstartup-notification0-dev libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb1-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-util-dev flex cppcheck
+cd ~/ 
+git clone https://github.com/davatorium/rofi.git 
+pip install meson
+cd rofi && meson setup build
+sudo ninja -C build install
+
 # =====
 # PICOM
 echo "[3/3] Setting up PICOM"
