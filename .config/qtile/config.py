@@ -81,9 +81,25 @@ keys = [
         lazy.layout.section_up(),
         desc="Move windows up in current stack",
     ),
+
+    Key(
+        [MOD_KEY, "shift"],
+        "h",
+        lazy.layout.shuffle_left(),
+        lazy.layout.section_left(),
+        desc="Move windows left in current stack",
+    ),
+    Key(
+        [MOD_KEY, "shift"],
+        "l",
+        lazy.layout.shuffle_right(),
+        lazy.layout.section_right(),
+        desc="Move windows right in current stack",
+    ),
     Key(
         [MOD_KEY],
         "h",
+        lazy.layout.left().when(layout="bsp"),
         lazy.layout.shrink(),
         lazy.layout.decrease_nmaster(),
         desc="Shrink window (MonadTall), decrease number in master pane (Tile)",
@@ -91,6 +107,7 @@ keys = [
     Key(
         [MOD_KEY],
         "l",
+        lazy.layout.right().when(layout="bsp"),
         lazy.layout.grow(),
         lazy.layout.increase_nmaster(),
         desc="Expand window (MonadTall), increase number in master pane (Tile)",
@@ -156,7 +173,7 @@ layout_theme = {
 
 layouts = [
     # layout.MonadWide(**layout_theme),
-    # layout.Bsp(**layout_theme),
+    layout.Bsp(**layout_theme),
     # layout.Stack(stacks=2, **layout_theme),
     # layout.Columns(**layout_theme),
     # layout.RatioTile(**layout_theme),
@@ -332,7 +349,7 @@ def init_widgets_screen2():
 
 def init_screens():
     return [
-        Screen(top=bar.Bar(widgets=init_widgets_screen1(), opacity=1.0, size=30)),
+        Screen(top=bar.Bar(widgets=init_widgets_screen1(), opacity=1.0, size=20)),
         Screen(top=bar.Bar(widgets=init_widgets_screen2(), opacity=1.0, size=20)),
     ]
 
