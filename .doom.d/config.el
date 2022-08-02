@@ -105,7 +105,7 @@
       :desc "dap debug"         "s" #'dap-debug
 
       ;; UI
-      :prefix("u" . "ui")
+      :prefix("du" . "ui")
       :desc "dap show brkpoint" "b" #'dap-ui-breakpoints
       :desc "dap show sessions" "S" #'dap-ui-sessions
       :desc "dap show locals"   "l" #'dap-ui-locals
