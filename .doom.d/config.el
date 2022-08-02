@@ -103,7 +103,14 @@
       :desc "dap hydra"         "h" #'dap-hydra
       :desc "dap debug restart" "r" #'dap-debug-restart
       :desc "dap debug"         "s" #'dap-debug
+
+      ;; UI
+      :prefix("u" . "ui")
+      :desc "dap show brkpoint" "b" #'dap-ui-breakpoints
       :desc "dap show sessions" "S" #'dap-ui-sessions
+      :desc "dap show locals"   "l" #'dap-ui-locals
+      :desc "dap show repl"     "r" #'dap-ui-repl
+      :desc "dap show thread"   "t" #'dap-ui-thread-select
 
       ;; debug
       :prefix ("dd" . "Debug")
