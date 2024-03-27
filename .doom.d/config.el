@@ -22,12 +22,13 @@
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
-(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 14 :weight 'medium))
+(setq doom-font (font-spec :family "Iosevka SS05 Extended" :size 15 :weight 'regular))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-tomorrow-night)
+(setq doom-theme 'doom-spacegrey)
+;; (setq doom-theme 'doom-tomorrow-night)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -39,7 +40,7 @@
 
 
 ;; set treemacs settings
-(setq doom-themes-treemacs-theme "doom-colors")
+;; (setq doom-themes-treemacs-theme "doom-colors")
 (setq treemacs-git-mode 'extended)
 
 ;; disable popup ui docs
@@ -49,6 +50,7 @@
 (setq rustic-lsp-server 'rust-analyzer)
 (after! rustic
   (setq lsp-rust-server 'rust-analyzer))
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -66,17 +68,23 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
 ;; C++ clangd setup
-(setq lsp-clients-clangd-args '("-j=6"
-				"--background-index"
-				"--clang-tidy"
-                                "--query-driver=clang-14"
-                                "--fallback-style=chromium"
-				"--completion-style=detailed"
-				"--header-insertion=never"
-				"--header-insertion-decorators=0"))
-(after! lsp-clangd (set-lsp-priority! 'clangd 2))
+(after! lsp-clangd
+  (setq lsp-clangd-binary-path "/usr/bin/clangd")
+  (setq lsp-clients-clangd-args '("-j=10"
+                                  "--background-index"
+                                  "--clang-tidy"
+                                  "--query-driver=clang-16"
+                                  "--completion-style=detailed"
+                                  "--log=verbose"
+                                  "--header-insertion=never"
+                                  "--header-insertion-decorators=0"))
+  (set-lsp-priority! 'clangd 2))
+
+;; (setq! lsp-enable-on-type-formatting nil)
+;; (setq! format-all-mode :false)
 
 ;; C++ CCLS setup
 ;; (after! ccls
@@ -90,6 +98,42 @@
 
 (after! dap-mode
   (setq dap-python-debugger 'debugpy))
+
+
+(use-package dap-mode
+  :defer
+  :custom
+  (dap-auto-configure-mode t                           "Automatically configure dap.")
+  (dap-auto-configure-features
+   '(sessions locals breakpoints expressions tooltip)  "Remove the button panel in the top.")
+                                        ; :hook (dap-stopped . (lambda (arg) (call-interactively #dap-hydra)))
+  :config
+  ;;; dap for c++
+  (require 'dap-cpptools)
+
+  ;;; set the debugger executable (c++)
+  (setq dap-lldb-debug-program '("/opt/homebrew/opt/llvm/bin/lldb-vscode"))
+
+  ;;; ask user for executable to debug if not specified explicitly (c++)
+  (setq dap-lldb-debugged-program-function (lambda () (read-file-name "Select file to debug.")))
+
+;;; default debug template for (c++)
+  (dap-register-debug-template
+   "C++ LLDB default dap"
+   (list :type "lldb-vscode"
+         :cwd nil
+         :args nil
+         :request "launch"
+         :program nil))
+
+  (defun dap-debug-create-or-edit-json-template ()
+    "Edit the C++ debugging configuration or create + edit if none exists yet."
+    (interactive)
+    (let ((filename (concat (lsp-workspace-root) "/launch.json"))
+          (default "~/.emacs.d/default-launch.json"))
+      (unless (file-exists-p filename)
+        (copy-file default filename))
+      (find-file-existing filename))))
 
 ;; Setup debugger
 (map! :map dap-mode-map
@@ -128,6 +172,8 @@
 
       :prefix ("db" . "Breakpoint")
       :desc "dap breakpoint toggle"      "b" #'dap-breakpoint-toggle
+      :desc "dap breakpoint delete"      "d" #'dap-breakpoint-delete
+      :desc "dap breakpoint delete all"  "A" #'dap-breakpoint-delete-all
       :desc "dap breakpoint condition"   "c" #'dap-breakpoint-condition
       :desc "dap breakpoint hit count"   "h" #'dap-breakpoint-hit-condition
       :desc "dap breakpoint log message" "l" #'dap-breakpoint-log-message)
@@ -136,6 +182,18 @@
 
 ;;(use-package cmake-font-lock
 ;;  :after (cmake-mode)
+
+;; company completion map
+(map! (:when (modulep! :completion company)
+        (:map company-active-map "C-l"  #'company-complete-selection)))
+
+
+(use-package affe)
+(map! :leader
+      :prefix ("s" . "search")
+      :desc "Fzf file in folder"  "f" (cmd!! #'affe-find)
+      :desc "Fzf project grep" "p" (cmd!! #'affe-grep))
+
 
 
 ;; (use-package cmake-ide
@@ -162,6 +220,11 @@
 ;; Pyright. STRICT PYTHON FOR MASSES
 (use-package lsp-pyright)  ; or lsp-deferred
 (setq! lsp-pyright-typechecking-mode "strict")
+(setq! lsp-enable-file-watchers nil)
+
+;; (setenv "PATH" (concat (getenv "PATH") ":/Users/iy/.ghcup/bin/haskell-language-server-9.2.8"))
+;; (setq exec-path (append exec-path '("/Users/iy/.ghcup/bin/haskell-language-server-9.2.8")))
+;; /Users/iy/.ghcup/bin/haskell-language-server-9.2.8
 
 ;; Org madness
 (setq org-hide-emphasis-markers t)
@@ -169,7 +232,27 @@
 ;; increase max # of lines for errmsg
 (after! lsp-ui
   (setq lsp-ui-sideline-diagnostic-max-lines 2))
+
 ;; `-` char replace for lists
 (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+                        '(("^ *\\([-]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+
+(defcustom mac-animation-dur 0.2 "Duration for animation transitions")
+
+(defvar mac-animation-locked-p nil)
+(defun mac-animation-toggle-lock ()
+  (setq mac-animation-locked-p (not mac-animation-locked-p)))
+
+(defun animate-frame-fade-out (&rest args)
+  (unless mac-animation-locked-p
+    (mac-animation-toggle-lock)
+    (mac-start-animation nil :type 'fade-out :duration mac-animation-dur)
+    (run-with-timer mac-animation-dur nil 'mac-animation-toggle-lock)))
+
+(advice-add 'set-window-buffer :before 'animate-frame-fade-out)
+(advice-add 'split-window :before 'animate-frame-fade-out)
+(advice-add 'delete-window :before 'animate-frame-fade-out)
+(advice-add 'delete-other-windows :before 'animate-frame-fade-out)
+(advice-add 'window-toggle-side-windows :before 'animate-frame-fade-out)
