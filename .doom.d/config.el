@@ -2,12 +2,12 @@
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
-
+(setq fancy-splash-image (concat doom-user-dir "doomEmacs.svg"))
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Ivan Yakushev"
-      user-mail-address "iamaero7@gmail.com")
+      user-mail-address "iamaero7@quantumbrains.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -22,13 +22,45 @@
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
-(setq doom-font (font-spec :family "Iosevka SS05 Extended" :size 15 :weight 'regular))
+(add-to-list 'default-frame-alist '(undecorated . t))
+(add-to-list 'default-frame-alist '(drag-internal-border . 10))
+(add-to-list 'default-frame-alist '(internal-border-width . 10))
+(set-frame-parameter (selected-frame) 'alpha '(95 95))
+(add-to-list 'default-frame-alist '(alpha 95 95))
+
+(add-hook 'window-setup-hook #'toggle-frame-maximized)
+
+
+(setq doom-font (font-spec :family "Iosevka SS05 Extended" :size 18 :height 18 :weight 'bold))
+;; (setq doom-font (font-spec :family "Courier" :size 15 :weight 'semibold))
+;; (setq doom-font (font-spec :family "Hasklig" :size 15 :weight 'regular))
+;; (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 15 :weight 'regular))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-spacegrey)
+(setq doom-theme 'doom-zenburn)
+;; (setq doom-theme 'doom-monokai-octagon)
 ;; (setq doom-theme 'doom-tomorrow-night)
+
+
+;; Allows vertico to open files in new side buffers
+(defun cust/vsplit-open (f)
+  (let ((evil-vsplit-window-right t))
+    (+evil/window-vsplit-and-follow)
+    (find-file f)))
+
+(defun cust/split-open (f)
+  (let ((evil-vsplit-window-right t))
+    (+evil/window-split-and-follow)
+    (find-file f)))
+
+(map! :after embark
+      :map embark-file-map
+      "O" #'cust/vsplit-open
+      "V" #'cust/split-open)
+
+
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -71,17 +103,17 @@
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
 ;; C++ clangd setup
-(after! lsp-clangd
-  (setq lsp-clangd-binary-path "/usr/bin/clangd")
-  (setq lsp-clients-clangd-args '("-j=10"
-                                  "--background-index"
-                                  "--clang-tidy"
-                                  "--query-driver=clang-16"
-                                  "--completion-style=detailed"
-                                  "--log=verbose"
-                                  "--header-insertion=never"
-                                  "--header-insertion-decorators=0"))
-  (set-lsp-priority! 'clangd 2))
+
+(setq lsp-clangd-binary-path "/usr/bin/clangd")
+(setq lsp-clients-clangd-args '("-j=8"
+                                "--background-index"
+                                "--clang-tidy"
+                                "--query-driver=clang-16"
+                                "--completion-style=detailed"
+                                "--log=verbose"
+                                "--header-insertion=never"
+                                "--header-insertion-decorators=0"))
+(after! lsp-clangd (set-lsp-priority! 'clangd 2))
 
 ;; (setq! lsp-enable-on-type-formatting nil)
 ;; (setq! format-all-mode :false)
@@ -92,15 +124,17 @@
 ;;   (set-lsp-priority! 'ccls 2)) ; optional as ccls is the default in Doom
 
 ;; CMake goodies
-(use-package cmake-mode
+(use-package! cmake-mode
   :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")
   :hook (cmake-mode . lsp-deferred))
+
+;; (setq debug-on-error t)
 
 (after! dap-mode
   (setq dap-python-debugger 'debugpy))
 
 
-(use-package dap-mode
+(use-package! dap-mode
   :defer
   :custom
   (dap-auto-configure-mode t                           "Automatically configure dap.")
@@ -188,7 +222,7 @@
         (:map company-active-map "C-l"  #'company-complete-selection)))
 
 
-(use-package affe)
+(use-package! affe)
 (map! :leader
       :prefix ("s" . "search")
       :desc "Fzf file in folder"  "f" (cmd!! #'affe-find)
@@ -218,9 +252,15 @@
 
 
 ;; Pyright. STRICT PYTHON FOR MASSES
-(use-package lsp-pyright)  ; or lsp-deferred
-(setq! lsp-pyright-typechecking-mode "strict")
-(setq! lsp-enable-file-watchers nil)
+
+(use-package! lsp-pyright
+  :hook (python-mode . (lambda ()(require 'lsp-pyright)(lsp))))  ; or lsp-deferred
+
+(after! lsp-pyright
+(setq lsp-pyright-langserver-command "basedpyright")
+  (setq! lsp-pyright-typechecking-mode "strict"
+         lsp-enable-file-watchers nil)
+  )
 
 ;; (setenv "PATH" (concat (getenv "PATH") ":/Users/iy/.ghcup/bin/haskell-language-server-9.2.8"))
 ;; (setq exec-path (append exec-path '("/Users/iy/.ghcup/bin/haskell-language-server-9.2.8")))
