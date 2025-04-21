@@ -28,8 +28,6 @@
 (set-frame-parameter (selected-frame) 'alpha '(95 95))
 (add-to-list 'default-frame-alist '(alpha 95 95))
 
-(add-hook 'window-setup-hook #'toggle-frame-maximized)
-
 
 (setq doom-font (font-spec :family "Iosevka SS05 Extended" :size 18 :height 18 :weight 'bold))
 ;; (setq doom-font (font-spec :family "Courier" :size 15 :weight 'semibold))
@@ -40,9 +38,16 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-zenburn)
-;; (setq doom-theme 'doom-monokai-octagon)
-;; (setq doom-theme 'doom-tomorrow-night)
 
+;; (setq hl-todo-keyword-faces
+;;       '(("SAFETY" . "#C0FFEE")))
+
+;; Org settings
+(setq diary-file "~/.org/diary")
+(setq org-id-locations-file "~/.org/.orgids")
+
+;; For some reason it stopped working by default
+(setq evil-escape-key-sequence "jk")
 
 ;; Allows vertico to open files in new side buffers
 (defun cust/vsplit-open (f)
@@ -55,11 +60,24 @@
     (+evil/window-split-and-follow)
     (find-file f)))
 
+(defun my-vterm/split-right ()
+  "Create a new vterm window to the right of the current one."
+  (interactive)
+  (let* ((ignore-window-parameters t)
+         (dedicated-p (window-dedicated-p)))
+    (split-window-horizontally)
+    (other-window 1)
+    (+vterm/here default-directory)))
+
+
 (map! :after embark
       :map embark-file-map
       "O" #'cust/vsplit-open
       "V" #'cust/split-open)
 
+(map! :leader
+      :prefix ("o")
+      "v" #'my-vterm/split-right)
 
 
 ;; If you use `org' and don't want your org files in the default location below,
@@ -108,7 +126,7 @@
 (setq lsp-clients-clangd-args '("-j=8"
                                 "--background-index"
                                 "--clang-tidy"
-                                "--query-driver=clang-16"
+                                "--query-driver=clang-19"
                                 "--completion-style=detailed"
                                 "--log=verbose"
                                 "--header-insertion=never"
@@ -168,6 +186,14 @@
       (unless (file-exists-p filename)
         (copy-file default filename))
       (find-file-existing filename))))
+
+
+;; RG for project search
+(map! :map search-map
+      :leader
+      :prefix ("s" . "search")
+      :desc   "ripgrep"  "g" #'consult-ripgrep)
+
 
 ;; Setup debugger
 (map! :map dap-mode-map
@@ -250,17 +276,48 @@
 ;;   :init (cmake-ide-setup)
 ;;   :config (advice-add 'cmake-ide-compile :after #'my/switch-to-compilation-window))
 
+;; golden-ratio
+;; (use-package! golden-ratio
+;;   :ensure t
+;;   :hook (after-init . golden-ratio-mode ))
+;;   :custom (golden-ratio-exclude-mode '(occur-mode)))
+
+
+(setq grip-mdopen-path "/Users/iy/.cargo/bin/mdopen")
+(setq grip-use-mdopen :true)
+
+(use-package! spacious-padding
+  :ensure t
+  :hook ( after-init . spacious-padding-mode )
+  )
 
 ;; Pyright. STRICT PYTHON FOR MASSES
+
+(setq lsp-pyright-multi-root nil)
 
 (use-package! lsp-pyright
   :hook (python-mode . (lambda ()(require 'lsp-pyright)(lsp))))  ; or lsp-deferred
 
 (after! lsp-pyright
-(setq lsp-pyright-langserver-command "basedpyright")
+  (setq lsp-pyright-langserver-command "basedpyright")
   (setq! lsp-pyright-typechecking-mode "strict"
          lsp-enable-file-watchers nil)
   )
+
+
+
+(require 'ruff-format)
+(add-hook 'python-mode-hook 'ruff-format-on-save-mode)
+(setq lsp-ruff-advertize-organize-imports nil)
+
+(after! apheleia
+  (setf (alist-get 'python-mode apheleia-mode-alist)
+        '(ruff-isort ruff))
+  (setf (alist-get 'python-ts-mode apheleia-mode-alist)
+        '(ruff-isort ruff))
+  )
+;; Override default balck formatter
+(setq-hook! 'python-mode-hook +format-with 'ruff)
 
 ;; (setenv "PATH" (concat (getenv "PATH") ":/Users/iy/.ghcup/bin/haskell-language-server-9.2.8"))
 ;; (setq exec-path (append exec-path '("/Users/iy/.ghcup/bin/haskell-language-server-9.2.8")))
